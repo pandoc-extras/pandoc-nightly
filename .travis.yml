@@ -37,12 +37,24 @@ install:
   - ulimit -n 4096
 script:
   - git clone https://github.com/jgm/pandoc
-  - cd pandoc && git submodule update --init && stack setup && stack build
-  - find .stack-work/install -type f -iname 'pandoc' -exec ls -l {} +
+  - cd pandoc
+  - git submodule update --init
+  - stack setup
+  - stack build
+  - cd .. && mkdir -p dist
+  - mv $(find pandoc/.stack-work/install -type f -iname 'pandoc') dist/
+  - |
+    if [[ `uname` == "Darwin" ]]; then
+      filename=pandoc-osx-$(git rev-parse HEAD)
+    else
+      filename=pandoc-amd64-$(git rev-parse HEAD)
+    fi
+  - zip $filename.zip dist/pandoc
 deploy:
   provider: releases
   api_key: "$GH_TOKEN"
-  file: # files here
+  file:
+    - $filename.zip
   skip_cleanup: true
   on:
     tags: true

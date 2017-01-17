@@ -1,0 +1,42 @@
+# This .travis.yml is modified from pandoc's
+sudo: false
+language: generic
+cache:
+  directories:
+    - $HOME/.ghc
+    - $HOME/.stack
+matrix:
+  include:
+  - env: BUILD=stack ARGS="--resolver lts-7"
+    compiler: ": #stack 8.0.1"
+    addons:
+      apt:
+        packages:
+          - ghc-8.0.1
+        sources:
+          - hvr-ghc
+  - env: BUILD=stack ARGS="--resolver lts-7"
+    compiler: ": #stack 8.0.1 osx"
+    os: osx
+before_install:
+  # Using compiler above sets CC to an invalid value, so unset it
+  - unset CC
+  # Download and unpack the stack executable
+  - export PATH=$PATH:/opt/happy/1.19.5/bin/:/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$HOME/.local/bin
+  - mkdir -p ~/.local/bin
+  - |
+    if [ `uname` = "Darwin" ]
+    then
+      curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
+    else
+      curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+    fi
+install:
+  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
+  - if [ -f configure.ac ]; then autoreconf -i; fi
+  - ulimit -n 4096
+script:
+  - git clone https://github.com/jgm/pandoc
+  - cd pandoc && stack setup && stack install --test
+  - mkdir -p dist && mv ~/.local/bin/pandoc dist/
+  - ls dist -l

@@ -37,6 +37,5 @@ install:
   - ulimit -n 4096
 script:
   - git clone https://github.com/jgm/pandoc
-  - cd pandoc && stack setup && stack install --test
-  - mkdir -p dist && mv ~/.local/bin/pandoc dist/
-  - ls dist -l
+  - cd pandoc && git submodule update --init && stack setup && stack build
+  - find .stack-work -type f -iname 'pandoc' -exec ls -l {} +

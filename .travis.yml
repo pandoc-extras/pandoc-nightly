@@ -39,3 +39,10 @@ script:
   - git clone https://github.com/jgm/pandoc
   - cd pandoc && git submodule update --init && stack setup && stack build
   - find .stack-work -type f -iname 'pandoc' -exec ls -l {} +
+deploy:
+  provider: releases
+  api_key: "$GH_TOKEN"
+  file: # files here
+  skip_cleanup: true
+  on:
+    tags: true

@@ -36,20 +36,22 @@ install:
   - if [ -f configure.ac ]; then autoreconf -i; fi
   - ulimit -n 4096
 script:
+  # clone from git
   - git clone https://github.com/jgm/pandoc
   - cd pandoc
   - git submodule update --init
+  # build
   - stack setup
   - stack build
-  - cd .. && mkdir -p dist
-  - mv $(find pandoc/.stack-work/install -type f -iname 'pandoc') dist/
+  # zip binary
   - |
     if [[ `uname` == "Darwin" ]]; then
       filename=pandoc-osx-$(git rev-parse HEAD)
     else
       filename=pandoc-amd64-$(git rev-parse HEAD)
     fi
-  - zip $filename.zip dist/pandoc
+  - cd ..
+  - zip $filename.zip "$(find pandoc/.stack-work/install -type f -iname 'pandoc')"
 deploy:
   provider: releases
   api_key: "$GH_TOKEN"

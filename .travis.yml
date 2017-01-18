@@ -52,8 +52,9 @@ script:
       filename=pandoc-amd64-$HASH
     fi
   - cd ..
-  - mv "$(find pandoc/.stack-work/install -type f -iname 'pandoc')" ./
-  - zip $filename.zip pandoc
+  - mkdir -p $filename
+  - mv "$(find pandoc/.stack-work/install -type f -iname 'pandoc')" $filename
+  - zip $filename.zip $filename/pandoc
   # debug
   - ls -l
 after_success:

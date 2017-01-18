@@ -63,8 +63,6 @@ after_success:
       git config --global user.email "builds@travis-ci.com"
       git config --global user.name "Travis CI"
       export GIT_TAG="hash-$HASH"
-      echo -n $GIT_TAG > version.txt
-      git commit -m "Set build VERSION number" version.txt
       git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
       git push --quiet https://$GH_TOKEN_SECURE@github.com/pandoc-extras/pandoc-nightly $GH_TOKEN_SECURE > /dev/null 2>&1
     fi

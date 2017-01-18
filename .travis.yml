@@ -54,9 +54,12 @@ script:
   - zip $filename.zip "$(find pandoc/.stack-work/install -type f -iname 'pandoc')"
 deploy:
   provider: releases
-  api_key: "$GH_TOKEN"
+  api_key: "$GH_TOKEN_SECURE"
   file:
     - $filename.zip
   skip_cleanup: true
   on:
     tags: true
+env:
+  global:
+    secure: PDNr60bZ/drP2nEkW+8mP9DNPONjElxMrxLSsVtXcDLJbDZPmyFahgiHmYERYiUGXQmzuyQbqQNBydFnHUbeRdZ+owLGzTIv8RzZ1SX+7OKZTwc38cJV3nWq3/F57DXsI32IW21RU1JN0HjCi33X4pDlrz597D78LKS3wRAREgxYMcq1FO+GtQ8B7NdLgFni0g94GiIUOyDoAut1yh43V7LoMtt6izQFJFyENUsaHl6xhhdxBoE6qnNhwP+CxscsCf+keezwCFgjuV+cwmxDhspY5Kx/bPfN0c2/Dwgv/nq+JjsbvVYJUjg/gHvg2dlwkGZKXIn8YmI492UwYxSOJ3TgLktdEgrkjRDPGwRvGpkqkZcZg65BEaTNzb/mj+kqd1sGo3NAfuDP8ArqJrYM2G4qfD2yIDKsFSMnIOH+6g6jmTEVPQt9yA2a3ZyUrXzdgs2i/AtsmUB4YYWHcIjcsjmdGZm6CgG3BMIMUmNuWZk9Ad3YEibd6raZ52RuTkICm0UQjCckg4QG10gS1ZYTTLyJle8f2HWxZZixBGfJQMmJsfn8jFoGsl9SKIseQ3VtEnmsHXSqW9tADFQ9+3n7wiCe+3mUaBVbKhKs6LCEf+oHi/nnkOSbPePdd43gBx3u85dww7jwoE5zDU22zWEBTa3wLztZfHAut8BQ5bYIeXw=

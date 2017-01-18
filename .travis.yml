@@ -44,16 +44,17 @@ script:
   - stack setup
   - stack build
   # zip binary
+  - HASH=$(git rev-parse HEAD)
   - |
     if [[ `uname` == "Darwin" ]]; then
-      filename=pandoc-osx-$(git rev-parse HEAD)
+      filename=pandoc-osx-$HASH
     else
-      filename=pandoc-amd64-$(git rev-parse HEAD)
+      filename=pandoc-amd64-$HASH
     fi
   - cd ..
-  - PANDOC=$(find pandoc/.stack-work/install -type f -iname 'pandoc')
-  - mv "$PANDOC" ./
+  - mv "$(find pandoc/.stack-work/install -type f -iname 'pandoc')" ./
   - zip $filename.zip pandoc
+  # debug
   - ls -l
 deploy:
   provider: releases

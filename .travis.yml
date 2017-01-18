@@ -56,6 +56,15 @@ script:
   - zip $filename.zip pandoc
   # debug
   - ls -l
+after_success:
+  - |
+    if [[ $TRAVIS_EVENT_TYPE == 'cron' ]]; then
+      git config --global user.email "builds@travis-ci.com"
+      git config --global user.name "Travis CI"
+      export GIT_TAG="hash-$HASH"
+      git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+      git push origin $GIT_TAG
+    fi
 deploy:
   provider: releases
   api_key: "$GH_TOKEN_SECURE"

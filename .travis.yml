@@ -51,7 +51,10 @@ script:
       filename=pandoc-amd64-$(git rev-parse HEAD)
     fi
   - cd ..
-  - zip $filename.zip "$(find pandoc/.stack-work/install -type f -iname 'pandoc')"
+  - PANDOC=$(find pandoc/.stack-work/install -type f -iname 'pandoc')
+  - mv "$PANDOC" ./
+  - zip $filename.zip pandoc
+  - ls -l
 deploy:
   provider: releases
   api_key: "$GH_TOKEN_SECURE"

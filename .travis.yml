@@ -47,9 +47,11 @@ script:
   - zip $filename.zip $filename/pandoc
   # debug
   - ls -l
+  - $filename/pandoc -v
 after_success:
+  # create git tag if it's a cron job and not osx (avoid creating git tag twice)
   - |
-    if [[ $TRAVIS_EVENT_TYPE == 'cron' ]]; then
+    if [[ $TRAVIS_EVENT_TYPE == 'cron' ]] && [[ `uname` != "Darwin" ]]; then
       git config --global user.email "builds@travis-ci.com"
       git config --global user.name "Travis CI"
       export GIT_TAG="hash-$HASH"

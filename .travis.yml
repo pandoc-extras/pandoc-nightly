@@ -14,7 +14,7 @@ matrix:
         sources:
           - hvr-ghc
   - os: osx
-before_install:
+install:
   # Download and unpack the stack executable
   - export PATH=$PATH:$HOME/.local/bin
   - mkdir -p ~/.local/bin
@@ -25,10 +25,6 @@ before_install:
     else
       curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
     fi
-install:
-  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
-  - if [ -f configure.ac ]; then autoreconf -i; fi
-  - ulimit -n 4096
 script:
   # clone from git
   - git clone https://github.com/jgm/pandoc

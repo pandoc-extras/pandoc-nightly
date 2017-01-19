@@ -45,11 +45,11 @@ script:
   - mkdir -p $filename
   - mv "$(find pandoc/.stack-work/install -type f -iname 'pandoc')" $filename
   - zip $filename.zip $filename/pandoc
-  # cleanup and move to dist/
-  - rm -rf $filename/pandoc
-  - mkdir -p dist && mv $filename/pandoc dist/
   # debug
   - $filename/pandoc -v
+  # cleanup and move to dist/
+  - rm -rf $filename/pandoc
+  - mkdir -p dist && mv $filename.zip dist/
 after_success:
   # create git tag if it's a cron job and not osx (avoid creating git tag twice)
   - |

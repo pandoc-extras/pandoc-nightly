@@ -31,7 +31,6 @@ script:
   - cd pandoc
   - git submodule update --init
   # build
-  - stack setup
   - stack build
   # zip binary
   - HASH=$(git rev-parse HEAD)

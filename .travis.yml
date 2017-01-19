@@ -1,5 +1,4 @@
 # This .travis.yml is modified from pandoc's
-sudo: false
 language: generic
 cache:
   directories:
@@ -7,7 +6,8 @@ cache:
     - $HOME/.stack
 matrix:
   include:
-  - addons:
+  - sudo: false
+    addons:
       apt:
         packages:
           - ghc-8.0.1
@@ -44,12 +44,11 @@ script:
   - mkdir -p $filename
   - mv "$(find pandoc/.stack-work/install -type f -iname 'pandoc')" $filename
   - zip $filename.zip $filename/pandoc
-  # debug
-  - ls -l
-  - $filename/pandoc -v
   # cleanup and move to dist/
   - rm -rf $filename/pandoc
   - mkdir -p dist && mv $filename/pandoc dist/
+  # debug
+  - $filename/pandoc -v
 after_success:
   # create git tag if it's a cron job and not osx (avoid creating git tag twice)
   - |
@@ -69,6 +68,8 @@ after_success:
       wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.zip?branch=master' -O pandoc.zip
       mv pandoc.zip dist/$filename.zip
     fi
+  # debug
+  - ls -l dist/
 deploy:
   provider: releases
   api_key: "$GH_TOKEN_SECURE"

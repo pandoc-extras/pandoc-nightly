@@ -47,6 +47,9 @@ script:
   # debug
   - ls -l
   - $filename/pandoc -v
+  # cleanup and move to dist/
+  - rm -rf $filename/pandoc
+  - mkdir -p dist && mv $filename/pandoc dist/
 after_success:
   # create git tag if it's a cron job and not osx (avoid creating git tag twice)
   - |
@@ -58,11 +61,19 @@ after_success:
       git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
       git push --quiet https://$GH_TOKEN_SECURE@github.com/pandoc-extras/pandoc-nightly $GIT_TAG > /dev/null 2>&1
     fi
+  # download Windows' nightly from appveyor if is git tag and on Linux
+  - |
+    if [[ ! -z "$TRAVIS_TAG" ]] && [[ `uname` != "Darwin" ]]; then
+      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.msi?branch=master' -O pandoc.msi
+      mv pandoc.msi dist/$filename.msi
+      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.zip?branch=master' -O pandoc.zip
+      mv pandoc.zip dist/$filename.zip
+    fi
 deploy:
   provider: releases
   api_key: "$GH_TOKEN_SECURE"
-  file:
-    - $filename.zip
+  file_glob: true
+  file: "dist/*"
   skip_cleanup: true
   on:
     tags: true

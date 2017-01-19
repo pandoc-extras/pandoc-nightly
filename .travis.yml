@@ -65,9 +65,9 @@ after_success:
   - |
     if [[ ! -z "$TRAVIS_TAG" ]] && [[ `uname` != "Darwin" ]]; then
       wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.msi?branch=master' -O pandoc.msi
-      mv pandoc.msi dist/$filename.msi
+      mv pandoc.msi dist/pandoc-windows-$HASH.msi
       wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.zip?branch=master' -O pandoc.zip
-      mv pandoc.zip dist/$filename.zip
+      mv pandoc.zip dist/pandoc-windows-$HASH.zip
     fi
   # debug
   - ls -l dist/

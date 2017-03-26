@@ -58,11 +58,12 @@ after_success:
       git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
       git push --quiet https://$GH_TOKEN_SECURE@github.com/pandoc-extras/pandoc-nightly $GIT_TAG > /dev/null 2>&1
     fi
-  # zip binary if it is the git-tag build (GitHub Releases)
+  # zip pandoc binary and move to dist/ if it is the git-tag build (GitHub Releases)
   - |
     if [[ ! -z "$TRAVIS_TAG" ]]; then
-      mkdir -p dist
-      zip "dist/$filename.zip" "$path2pandoc"
+      mkdir -p $filename && mv $path2pandoc $filename
+      zip $filename.zip $filename/pandoc
+      mkdir -p dist && mv $filename.zip dist/
     fi
   # download Windows' nightly from appveyor if it is the git-tag build (GitHub Releases), only on Linux build
   - |

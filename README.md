@@ -1,7 +1,7 @@
 # Description
 
 This repository provides nightly builds for [pandoc](https://github.com/jgm/pandoc/). **The main purpose is for testing a potential bug before filing an issue.** See more below.
-(Or if you want to try the latest features of pandoc. But remember, nightly is not even beta. If you choose to use it, **YOU ARE ON YOUR OWN**. And please do not file bug reports on nightly builds.)
+(Or if you want to try the latest features of pandoc. But remember, nightly is not even beta. If you choose to use it, **you are on your own**.)
 
 Go to [the releases page](https://github.com/pandoc-extras/pandoc-nightly/releases/latest) to download pandoc for your platform (`pandoc-amd64-...` is for Linux).
 Only the pandoc executables are provided. Once you downloaded it, you can unzip it and run by specifying the absolute path of the pandoc executables explicity:
@@ -25,7 +25,7 @@ Often time we see bug reports opened in jgm/pandoc, from a very outdated version
 
 3. If the bug still persists, go to pandoc-nightly to download the latest available release in zip (which is built from the latest commit in the master branch of jgm/pandoc). And check if the bug has already been fixed in the master. If it is already fixed (although not yet included in the stable release), you need not to file a bug report.
 
-4. **DO NOT FILE BUG REPORT that's only found in pandoc-nightly**. It is completely normal and that's why it's called nightly.
+4. **Do not file bug report that's only found in pandoc-nightly**. It is completely normal and that's why it's called nightly.
 
 # Versioning
 

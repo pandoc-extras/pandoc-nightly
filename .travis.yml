@@ -10,13 +10,12 @@ matrix:
     addons:
       apt:
         packages:
-          - ghc-8.0.1
+          - ghc-8.0.2
         sources:
           - hvr-ghc
   - os: osx
 install:
   # Download and unpack the stack executable
-  - export PATH=$PATH:$HOME/.local/bin
   - mkdir -p ~/.local/bin
   - |
     if [ `uname` = "Darwin" ]
@@ -25,47 +24,51 @@ install:
     else
       curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
     fi
-script:
+  - export PATH=$PATH:$HOME/.local/bin
+before_script:
   # clone from git
   - git clone https://github.com/jgm/pandoc
   - cd pandoc
   - git submodule update --init
-  # build
-  - stack setup
-  - stack build
-  # zip binary
+  # get the current commit hash of pandoc
   - HASH=$(git rev-parse HEAD)
+  # filename
   - |
     if [[ `uname` == "Darwin" ]]; then
       filename=pandoc-osx-$HASH
     else
       filename=pandoc-amd64-$HASH
     fi
+script:
+  # build
+  - stack setup
+  - stack build
   - cd ..
-  - mkdir -p $filename
-  - mv "$(find pandoc/.stack-work/install -type f -iname 'pandoc')" $filename
-  - zip $filename.zip $filename/pandoc
+  # path to the pandoc executable
+  - path2pandoc="$(find pandoc/.stack-work/install -type f -iname 'pandoc')"
   # debug
-  - $filename/pandoc -v
-  # cleanup and move to dist/
-  - rm -rf $filename/pandoc
-  - mkdir -p dist && mv $filename.zip dist/
+  - "$path2pandoc" -v
 after_success:
-  # create git tag if it's a cron job and not osx (avoid creating git tag twice)
+  # if it's a cron job, create git tag for GitHub Releases, only on Linux build
   - |
     if [[ $TRAVIS_EVENT_TYPE == 'cron' ]] && [[ `uname` != "Darwin" ]]; then
       git config --global user.email "builds@travis-ci.com"
       git config --global user.name "Travis CI"
       export GIT_TAG="hash-$HASH"
-      echo -n $HASH > version
       git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
       git push --quiet https://$GH_TOKEN_SECURE@github.com/pandoc-extras/pandoc-nightly $GIT_TAG > /dev/null 2>&1
     fi
-  # download Windows' nightly from appveyor if is git tag and on Linux
+  # zip binary if it is the git-tag build (GitHub Releases)
+  - |
+    if [[ ! -z "$TRAVIS_TAG" ]]; then
+      mkdir -p dist
+      zip "dist/$filename.zip" "$path2pandoc"
+    fi
+  # download Windows' nightly from appveyor if it is the git-tag build (GitHub Releases), only on Linux build
   - |
     if [[ ! -z "$TRAVIS_TAG" ]] && [[ `uname` != "Darwin" ]]; then
-      # wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.msi?branch=master' -O pandoc.msi
-      # mv pandoc.msi dist/pandoc-windows-$HASH.msi
+      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.msi?branch=master' -O pandoc.msi
+      mv pandoc.msi dist/pandoc-windows-$HASH.msi
       wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc.zip?branch=master' -O pandoc.zip
       mv pandoc.zip dist/pandoc-windows-$HASH.zip
     fi

@@ -35,7 +35,7 @@ before_script:
   - cd pandoc
   - git submodule update --init
   # get the current commit hash of pandoc
-  - HASH=$(git rev-parse HEAD)
+  - HASH=$(git rev-parse --short HEAD)
   # filename
   - |
     if [[ `uname` == "Darwin" ]]; then

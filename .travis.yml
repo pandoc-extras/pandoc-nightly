@@ -1,4 +1,4 @@
-# This .travis.yml is modified from pandoc's
+# This .travis.yml is modified from pandoc's at https://github.com/jgm/pandoc/blob/master/.travis.yml
 language: generic
 cache:
   directories:
@@ -16,14 +16,14 @@ matrix:
           - hvr-ghc
   - os: osx
 before_install:
+  # pandoc-nightly version
   - |
     printf "%s: %s\n" "pandoc-nightly version" "0.2.2"
 install:
   # Download and unpack the stack executable
   - mkdir -p ~/.local/bin
   - |
-    if [ `uname` = "Darwin" ]
-    then
+    if [[ `uname` = "Darwin" ]]; then
       curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
     else
       curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
@@ -55,7 +55,7 @@ script:
 after_success:
   # if it's a cron job, create git tag for GitHub Releases, only on Linux build
   - |
-    if [[ $TRAVIS_EVENT_TYPE == 'cron' ]] && [[ `uname` != "Darwin" ]]; then
+    if [[ $TRAVIS_EVENT_TYPE == 'cron' && `uname` != "Darwin" ]]; then
       git config --global user.email "builds@travis-ci.com"
       git config --global user.name "Travis CI"
       export GIT_TAG="hash-$HASH"
@@ -65,17 +65,18 @@ after_success:
   # zip pandoc binary and move to dist/ if it is the git-tag build (GitHub Releases)
   - |
     if [[ ! -z "$TRAVIS_TAG" ]]; then
-      mkdir -p $filename && mv $path2pandoc $filename
+      mkdir -p $filename
+      mv $path2pandoc $filename
       zip $filename.zip $filename/pandoc
-      mkdir -p dist && mv $filename.zip dist/
+      mkdir -p dist
+      mv $filename.zip dist/
     fi
   # download Windows' nightly from appveyor if it is the git-tag build (GitHub Releases), only on Linux build
   - |
-    if [[ ! -z "$TRAVIS_TAG" ]] && [[ `uname` != "Darwin" ]]; then
-      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-i386.msi?branch=master' -O pandoc.msi
-      mv pandoc.msi dist/pandoc-windows-$HASH.msi
-      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-i386.zip?branch=master' -O pandoc.zip
-      mv pandoc.zip dist/pandoc-windows-$HASH.zip
+    if [[ ! -z "$TRAVIS_TAG" && `uname` != "Darwin" ]]; then
+      mkdir -p dist
+      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-i386.msi?branch=master' -O dist/pandoc-windows-$HASH.msi
+      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-i386.zip?branch=master' -O dist/pandoc-windows-$HASH.zip
     fi
   # debug
   - ls -l dist/

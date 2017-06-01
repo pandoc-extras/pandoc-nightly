@@ -16,7 +16,8 @@ matrix:
           - hvr-ghc
   - os: osx
 before_install:
-  - printf "%s: %s\n" "pandoc-nightly version" "0.2.2"
+  - |
+    printf "%s: %s\n" "pandoc-nightly version" "0.2.2"
 install:
   # Download and unpack the stack executable
   - mkdir -p ~/.local/bin

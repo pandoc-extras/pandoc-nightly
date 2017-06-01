@@ -42,7 +42,7 @@ before_script:
 script:
   # build
   - stack setup
-  - stack build
+  - stack build --flag 'pandoc:embed_data_files'
   - cd ..
   # path to the pandoc executable
   - path2pandoc="$(find pandoc/.stack-work/install -type f -iname 'pandoc')"

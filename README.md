@@ -33,7 +33,7 @@ The commit hash of the pandoc's latest commit is used as the version here, as yo
 
 For example, version (git tag) `hash-1dc4b3925d96e26b89a1a30f36ab809662e283ad` uses the source from <https://github.com/jgm/pandoc/commit/1dc4b3925d96e26b89a1a30f36ab809662e283ad>. The `.zip` also follows the same pattern, so you can easily traced it back to which commit the binary is compiled against.
 
-The versions of the script and travis setup in this repository will be in this `README.md` file. Current version: 0.2.1
+The versions of the script and travis setup in this repository will be in the `before_install` section of the `.travis.yml`.
 
 **Caveat**: if you run `<pathTo>pandoc --version`, it will show **the version of the latest stable release instead** (because this is coded in the source code of pandoc). There's nothing much I can do about it, but given these nightly builds are provided in `.zip` without an installer, it should be hard to not remember it is not your usual stable installation.
 

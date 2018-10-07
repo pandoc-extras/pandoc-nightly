@@ -11,7 +11,7 @@ matrix:
     addons:
       apt:
         packages:
-          - ghc-8.0.2
+          - ghc-8.4.3
         sources:
           - hvr-ghc
   - os: osx
@@ -49,7 +49,7 @@ script:
   - stack build --flag 'pandoc:embed_data_files'
   - cd ..
   # path to the pandoc executable
-  - path2pandoc="$(find pandoc/.stack-work/install -type f -iname 'pandoc')"
+  - path2pandoc="$(find pandoc/.stack-work/install -type f -name pandoc)"
   # debug
   - $path2pandoc -v
 after_success:
@@ -75,8 +75,8 @@ after_success:
   - |
     if [[ ! -z "$TRAVIS_TAG" && `uname` != "Darwin" ]]; then
       mkdir -p dist
-      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-i386.msi?branch=master' -O dist/pandoc-windows-$HASH.msi
-      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-i386.zip?branch=master' -O dist/pandoc-windows-$HASH.zip
+      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-x86_64.msi?branch=master' -O dist/pandoc-windows-$HASH.msi
+      wget 'https://ci.appveyor.com/api/projects/jgm/pandoc/artifacts/windows/pandoc-windows-x86_64.zip?branch=master' -O dist/pandoc-windows-$HASH.zip
     fi
   # debug
   - ls -l dist/

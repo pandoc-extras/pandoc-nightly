@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pandoc-extras/pandoc-nightly.svg?branch=master)](https://travis-ci.org/pandoc-extras/pandoc-nightly)
+
 # Description
 
 This repository provides nightly builds for [pandoc](https://github.com/jgm/pandoc/). **The main purpose is for testing a potential bug before filing an issue.** See more below.

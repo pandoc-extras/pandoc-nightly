@@ -62,6 +62,15 @@ after_success:
       git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
       git push --quiet https://$GH_TOKEN_SECURE@github.com/pandoc-extras/pandoc-nightly $GIT_TAG > /dev/null 2>&1
     fi
+  # if it's a cron job, remove Draft releases on GitHub, only on macOS build
+  # These Draft releases exists when there's a broken release from Travis
+  - |
+    if [[ $TRAVIS_EVENT_TYPE == 'cron' && `uname` == "Darwin" ]]; then
+      brew update
+      brew outdated hub || brew upgrade hub
+      # hub expect the env var GITHUB_TOKEN and I'm too lazy to rename the one I added on Travis
+      GITHUB_TOKEN="$GH_TOKEN_SECURE" hub release -f "%T (%S) %n" --include-drafts | grep " (draft)" | awk '{print $1}' | xargs -t -n1 hub release delete || :
+    fi
   # zip pandoc binary and move to dist/ if it is the git-tag build (GitHub Releases)
   - |
     if [[ ! -z "$TRAVIS_TAG" ]]; then

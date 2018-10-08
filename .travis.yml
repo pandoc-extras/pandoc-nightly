@@ -18,7 +18,7 @@ matrix:
 before_install:
   # pandoc-nightly version
   - |
-    printf "%s: %s\n" "pandoc-nightly version" "0.2.2"
+    printf "%s: %s\n" "pandoc-nightly version" "0.3"
 install:
   # Download and unpack the stack executable
   - mkdir -p ~/.local/bin

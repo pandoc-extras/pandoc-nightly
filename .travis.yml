@@ -21,7 +21,6 @@ matrix:
         packages:
           - ghc
           - cabal-install
-          - stack
   - os: osx
 before_install:
   # pandoc-nightly version

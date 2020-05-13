@@ -59,7 +59,8 @@ script:
   - path2pandoc="$(find pandoc/.stack-work/install -type f -name pandoc)"
   # debug
   - echo "$path2pandoc"
-  - "$path2pandoc" -v
+  - |
+    "$path2pandoc" -v
 after_success:
   # if it's a cron job, create git tag for GitHub Releases, only on Linux build
   - |

@@ -22,7 +22,15 @@ install:
   # Download and unpack the stack executable
   - mkdir -p ~/.local/bin
   - curl -L "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64" | tar xz --strip-components=1 --wildcards "stack-*-${TRAVIS_OS_NAME}-x86_64/stack" -C ~/.local/bin
-  - export PATH=$PATH:$HOME/.local/bin
+  - export PATH="$HOME/.local/bin:$PATH"
+  - |
+    if [[ "$TRAVIS_OS_NAME" == osx ]]; then
+      wget 'https://downloads.haskell.org/~ghc/8.10.1/ghc-8.10.1-x86_64-apple-darwin.tar.xz'
+      tar -xf ghc-8.10.1-x86_64-apple-darwin.tar.xz
+      cd ghc-8.10.1
+      ./configure --prefix=~/.local
+      make install
+    fi
 before_script:
   # clone from git
   - git clone https://github.com/jgm/pandoc

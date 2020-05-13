@@ -36,7 +36,7 @@ install:
     if [[ "$TRAVIS_OS_NAME" == osx || "$TRAVIS_CPU_ARCH" == amd64 ]]; then
       wget "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64"
       tar -xf "${TRAVIS_OS_NAME}-x86_64"
-      find -name stack -exec mv {} ~/.local/bin \;
+      mv stack-*-${TRAVIS_OS_NAME}-x86_64/stack ~/.local/bin
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == osx ]]; then

@@ -13,6 +13,15 @@ matrix:
           - ghc-8.10.1
         sources:
           - hvr-ghc
+  - os: linux
+    arch: arm64
+    dist: bionic
+    addons:
+      apt:
+        packages:
+          - ghc
+          - cabal-install
+          - stack
   - os: osx
 before_install:
   # pandoc-nightly version

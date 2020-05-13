@@ -21,8 +21,11 @@ before_install:
 install:
   # Download and unpack the stack executable
   - mkdir -p ~/.local/bin
-  - curl -L "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64" | tar xz --strip-components=1 --wildcards "stack-*-${TRAVIS_OS_NAME}-x86_64/stack" -C ~/.local/bin
   - export PATH="$HOME/.local/bin:$PATH"
+  - mkdir -p ~/temp
+  - cd ~/temp
+  - wget "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64"
+  - tar -xf "${TRAVIS_OS_NAME}-x86_64" --strip-components=1 --wildcards "stack-*-${TRAVIS_OS_NAME}-x86_64/stack" -C ~/.local/bin
   - |
     if [[ "$TRAVIS_OS_NAME" == osx ]]; then
       wget 'https://downloads.haskell.org/~ghc/8.10.1/ghc-8.10.1-x86_64-apple-darwin.tar.xz'
@@ -33,6 +36,8 @@ install:
     fi
 before_script:
   # clone from git
+  - mkdir ~/git
+  - cd ~/git
   - git clone https://github.com/jgm/pandoc
   - cd pandoc
   - git submodule update --init
@@ -53,7 +58,8 @@ script:
   # path to the pandoc executable
   - path2pandoc="$(find pandoc/.stack-work/install -type f -name pandoc)"
   # debug
-  - $path2pandoc -v
+  - echo "$path2pandoc"
+  - "$path2pandoc" -v
 after_success:
   # if it's a cron job, create git tag for GitHub Releases, only on Linux build
   - |

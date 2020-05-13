@@ -21,12 +21,7 @@ before_install:
 install:
   # Download and unpack the stack executable
   - mkdir -p ~/.local/bin
-  - |
-    if [[ `uname` = "Darwin" ]]; then
-      curl --insecure -L https://www.stackage.org/stack/osx-x86_64 | tar xz --strip-components=1 --include '*/stack' -C ~/.local/bin
-    else
-      curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
-    fi
+  - curl -L "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64" | tar xz --strip-components=1 --wildcards "stack-*-${TRAVIS_OS_NAME}-x86_64/stack" -C ~/.local/bin
   - export PATH=$PATH:$HOME/.local/bin
 before_script:
   # clone from git
@@ -37,11 +32,11 @@ before_script:
   - HASH=$(git rev-parse --short HEAD)
   # filename
   - |
-    if [[ `uname` == "Darwin" ]]; then
-      filename=pandoc-osx-$HASH
-    else
-      filename=pandoc-amd64-$HASH
-    fi
+    case "$TRAVIS_OS_NAME" in
+      osx)   filename=pandoc-osx-$HASH   ;;
+      linux) filename=pandoc-amd64-$HASH ;;
+      *)     exit 1                      ;;
+    esac
 script:
   # build
   - stack setup
@@ -54,17 +49,17 @@ script:
 after_success:
   # if it's a cron job, create git tag for GitHub Releases, only on Linux build
   - |
-    if [[ $TRAVIS_EVENT_TYPE == 'cron' && `uname` != "Darwin" ]]; then
+    if [[ "$TRAVIS_EVENT_TYPE" == cron && "$TRAVIS_OS_NAME" == linux ]]; then
       git config --global user.email "builds@travis-ci.com"
       git config --global user.name "Travis CI"
       export GIT_TAG="hash-$HASH"
-      git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
-      git push --quiet https://$GH_TOKEN_SECURE@github.com/pandoc-extras/pandoc-nightly $GIT_TAG > /dev/null 2>&1
+      git tag "$GIT_TAG" -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+      git push --quiet https://$GH_TOKEN_SECURE@github.com/pandoc-extras/pandoc-nightly "$GIT_TAG" > /dev/null 2>&1
     fi
   # if it's a cron job, remove Draft releases on GitHub, only on macOS build
   # These Draft releases exists when there's a broken release from Travis
   - |
-    if [[ $TRAVIS_EVENT_TYPE == 'cron' && `uname` == "Darwin" ]]; then
+    if [[ $TRAVIS_EVENT_TYPE == 'cron' && "$TRAVIS_OS_NAME" == osx ]]; then
       brew update
       brew outdated hub || brew upgrade hub
       # hub expect the env var GITHUB_TOKEN and I'm too lazy to rename the one I added on Travis
@@ -81,7 +76,7 @@ after_success:
     fi
   # download Windows' nightly from appveyor if it is the git-tag build (GitHub Releases), only on Linux build
   - |
-    if [[ ! -z "$TRAVIS_TAG" && `uname` != "Darwin" ]]; then
+    if [[ ! -z "$TRAVIS_TAG" && "$TRAVIS_OS_NAME" == linux ]]; then
       mkdir -p dist
       for arch in i386 x86_64; do
         for ext in zip msi; do

@@ -115,18 +115,6 @@ after_success:
       mkdir -p dist
       mv $filename.zip dist/
     fi
-  # download Windows' nightly from appveyor if it is the git-tag build (GitHub Releases), only on Linux build
-  - |
-    if [[ ! -z "$TRAVIS_TAG" && "$TRAVIS_OS_NAME" == linux ]]; then
-      mkdir -p dist
-      for arch in i386 x86_64; do
-        for ext in zip msi; do
-          # https://groups.google.com/d/msg/pandoc-discuss/C3fzHtvgzIs/vpr-Z8d5AwAJ
-          JOBID=$(curl https://ci.appveyor.com/api/projects/jgm/pandoc | jq ".build.jobs[]| select(.name|test(\"$arch\")) | .jobId")
-          wget "https://ci.appveyor.com/api/buildjobs/${JOBID:1:-1}/artifacts/windows%2Fpandoc-windows-$arch.$ext" -O dist/pandoc-windows-$arch-$HASH.$ext
-        done
-      done
-    fi
   # debug
   - ls -l dist/
 deploy:

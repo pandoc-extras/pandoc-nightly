@@ -43,7 +43,7 @@ install:
       wget 'https://downloads.haskell.org/~ghc/8.10.1/ghc-8.10.1-x86_64-apple-darwin.tar.xz'
       tar -xf ghc-8.10.1-x86_64-apple-darwin.tar.xz
       cd ghc-8.10.1
-      ./configure --prefix=~/.local
+      ./configure --prefix="$HOME/.local"
       make install
     else
       echo skip installing cabal if not osx

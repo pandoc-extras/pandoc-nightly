@@ -60,9 +60,9 @@ before_script:
   # filename
   - |
     case "$TRAVIS_OS_NAME" in
-      osx)   filename=pandoc-osx-$HASH   ;;
-      linux) filename=pandoc-amd64-$HASH ;;
-      *)     exit 1                      ;;
+      osx)   filename=pandoc-osx-$HASH                  ;;
+      linux) filename="pandoc-${TRAVIS_CPU_ARCH}-$HASH" ;;
+      *)     exit 1                                     ;;
     esac
 script:
   # build

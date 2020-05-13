@@ -52,9 +52,9 @@ before_script:
   # clone from git
   - mkdir ~/git
   - cd ~/git
-  - git clone https://github.com/jgm/pandoc
+  - git clone --depth 1 https://github.com/jgm/pandoc --branch master --single-branch
   - cd pandoc
-  - git submodule update --init
+  - git submodule update --init --recommend-shallow
   # get the current commit hash of pandoc
   - HASH=$(git rev-parse --short HEAD)
   # filename

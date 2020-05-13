@@ -33,7 +33,7 @@ install:
   - mkdir -p ~/temp
   - cd ~/temp
   - wget "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64"
-  - tar -xf "${TRAVIS_OS_NAME}-x86_64" --strip-components=1 --wildcards "stack-*-${TRAVIS_OS_NAME}-x86_64/stack" -C ~/.local/bin
+  - tar -vxf "${TRAVIS_OS_NAME}-x86_64" --strip-components=1 --wildcards "stack-*-${TRAVIS_OS_NAME}-x86_64/stack" -C ~/.local/bin
   - |
     if [[ "$TRAVIS_OS_NAME" == osx ]]; then
       wget 'https://downloads.haskell.org/~ghc/8.10.1/ghc-8.10.1-x86_64-apple-darwin.tar.xz'

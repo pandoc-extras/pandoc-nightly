@@ -34,8 +34,9 @@ install:
   - cd ~/temp
   - |
     if [[ "$TRAVIS_OS_NAME" == osx || "$TRAVIS_CPU_ARCH" == amd64 ]]; then
-      curl -L "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64" | tar xz --strip-components=1 --wildcards "stack-*-${TRAVIS_OS_NAME}-x86_64/stack"
-      mv stack ~/.local/bin
+      wget "https://www.stackage.org/stack/${TRAVIS_OS_NAME}-x86_64"
+      tar -xf "${TRAVIS_OS_NAME}-x86_64"
+      find -name stack -exec mv {} ~/.local/bin \;
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == osx ]]; then

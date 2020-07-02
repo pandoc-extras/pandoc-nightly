@@ -121,10 +121,9 @@ after_success:
   - ls -l dist/
 deploy:
   provider: releases
-  api_key: "$GH_TOKEN_SECURE"
+  token: "$GH_TOKEN_SECURE"
   file_glob: true
   file: "dist/*"
-  skip_cleanup: true
   on:
     tags: true
 env:

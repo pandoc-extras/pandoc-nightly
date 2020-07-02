@@ -22,6 +22,9 @@ matrix:
           - ghc
           - cabal-install
   - os: osx
+jobs:
+  allow_failures:
+  - arch: arm64
 before_install:
   # pandoc-nightly version
   - |

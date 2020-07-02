@@ -4,7 +4,7 @@ cache:
   directories:
     - $HOME/.ghc
     - $HOME/.stack
-matrix:
+jobs:
   include:
   - dist: bionic
     addons:
@@ -22,7 +22,6 @@ matrix:
           - ghc
           - cabal-install
   - os: osx
-jobs:
   allow_failures:
   - arch: arm64
 before_install:
